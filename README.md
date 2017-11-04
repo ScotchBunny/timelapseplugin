@@ -1,3 +1,5 @@
+How to: https://youtu.be/q9FR-tIVvJI
+
 Disclaimer: Use this script at your own risk. The script is tested on a Wanhao Duplicator I3 V2 using RepRap Gcode flavor. It is highly recommended that you look over sample of Gcode before trying to print. The author takes no responcibility for damaged hardware as a result of using this script.
 
 Put the scrip in the directory {Cura install directory}\plugins\PostProcessingPlugin\scripts
