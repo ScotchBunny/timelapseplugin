@@ -9,3 +9,7 @@ Octoprint captures a frame at the start of the print as well as right after the 
 G28 G0 X100 Y100 Z1
 
 Using the GcodeEditor plugin for OctoPrint makes it more convenient to edit without re-uploading.
+
+## Note About AppImages ##
+
+AppImages do not support loading plugins from outside the AppImage. You will not be able to use this plugin with it.
