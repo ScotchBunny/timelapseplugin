@@ -12,4 +12,20 @@ Using the GcodeEditor plugin for OctoPrint makes it more convenient to edit with
 
 ## Note About AppImages ##
 
-AppImages do not support loading plugins from outside the AppImage. You will not be able to use this plugin with it.
+To use this script with an AppImage (e.g. for Linux), you need to extend the existing AppImage. To do so, download and run an appriate AppImage. Then run the following commands:
+
+	mkdir ~/Cura.AppDir
+	cp -arv $(mount | grep Cura | cut -f3 -d' ')/{*,.[^.]*} ~/Cura.AppDir
+	cd ~/Cura.AppDir/usr/bin/plugins/plugins/PostProcessingPlugin/scripts/
+	wget https://raw.githubusercontent.com/ScotchBunny/timelapseplugin/master/MoveToXYForTimelapse.py
+	cd ~/Cura.AppDir
+	sed -e 's,^MimeType=\(.*\);\?$,MimeType=\1;,gi' -e 's,Icon=cura-icon.png,Icon=cura-icon,gi' -i cura.desktop
+	cd ~/
+
+Now you can re-pack the AppImage:
+
+	wget -O appimagetool "https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
+	chmod +x appimagetool
+	./appimagetool ./Cura.AppDir
+
+This will produce a file `Cura-x86_64.AppImage` with the Timelapse Plugin included.
