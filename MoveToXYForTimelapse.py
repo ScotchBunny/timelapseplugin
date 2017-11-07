@@ -313,7 +313,13 @@ class MoveToXYForTimelapse(Script):
                     if not absolutePos:
                         new_gcode += "G90\n"
                     new_gcode += "G0 F%f X%f Y%f\n" % (travelSpeed, frame_x, frame_y)
-                    new_gcode += "G4 P%f\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\n" % (pause)
+                    new_gcode += "G4 P%f\n" % (pause)
+                    if useM400:
+                        new_gcode += "M400\n"
+                    buffline = 0
+                    while buffline < bufferSize:
+                        new_gcode += "G4 P1\n"
+                        buffline = buffline + 1
                     if not absolutePos:
                         new_gcode += "G91\n"
                     new_gcode += line + "\n"
