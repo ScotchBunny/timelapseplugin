@@ -61,6 +61,13 @@ class MoveToXYForTimelapse(Script):
                     "type": "float",
                     "default_value": 1
                 },
+                "UseM400":
+                {
+                    "label": "Use M400 GCode",
+                    "description": "Use an M400 GCode ('wait for buffer to be processed') in addition to Pause",
+                    "type": "bool",
+                    "default_value": true
+                },
                 "Retraction":
                 {
                     "label": "Retract on move",
@@ -111,6 +118,7 @@ class MoveToXYForTimelapse(Script):
         rSpeed = self.getSettingValueByKey("RetractionSpeed")*60
         zHopHeight = self.getSettingValueByKey("ZHopHeight")
         zHop = self.getSettingValueByKey("UseZHop")
+        useM400 = self.getSettingValueByKey("UseM400")
 
         pause = self.getSettingValueByKey("framePause")*1000
         if pause == 0:
@@ -216,7 +224,11 @@ class MoveToXYForTimelapse(Script):
                             new_gcode += "G0 F%f X%f Y%f\n" % (travelSpeed, frame_x, frame_y)
 
                             #Wait for in case of shaking printer and flush the G-code buffer
-                            new_gcode += "G4 P%f\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\n" % (pause)
+                            new_gcode += "G4 P%f\n" % (pause)
+                            if useM400:
+                                new_gcode += "M400\n"
+                            new_gcode += "G4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\n" % (pause)
+
                             #Perform Z-change, triggering the Octoprint timelapse
                             new_gcode += "G%f F%f Z%f\n" % (g, f, currentZ+zhopForNow+deltaZ)
                             #Move back to original position
