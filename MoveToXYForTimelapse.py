@@ -105,6 +105,14 @@ class MoveToXYForTimelapse(Script):
                     "description": "Use Z-Hop when moving to frame position if retraction is enabled above.",
                     "type": "bool",
                     "default_value": false
+                },
+                "Buffersize":
+                {
+                    "label": "Buffer size",
+                    "description": "Length of your printers command buffer, in lines.",
+                    "type": "float",
+                    "unit": "lines",
+                    "default_value": 10
                 }
             }
         }"""
@@ -119,6 +127,7 @@ class MoveToXYForTimelapse(Script):
         zHopHeight = self.getSettingValueByKey("ZHopHeight")
         zHop = self.getSettingValueByKey("UseZHop")
         useM400 = self.getSettingValueByKey("UseM400")
+        bufferSize = self.getSettingValueByKey("Buffersize")
 
         pause = self.getSettingValueByKey("framePause")*1000
         if pause == 0:
@@ -227,7 +236,10 @@ class MoveToXYForTimelapse(Script):
                             new_gcode += "G4 P%f\n" % (pause)
                             if useM400:
                                 new_gcode += "M400\n"
-                            new_gcode += "G4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\n" % (pause)
+                            buffline = 0
+                            while buffline < bufferSize:
+                                new_gcode += "G4 P1\n"
+                                buffline = buffline + 1
 
                             #Perform Z-change, triggering the Octoprint timelapse
                             new_gcode += "G%f F%f Z%f\n" % (g, f, currentZ+zhopForNow+deltaZ)
