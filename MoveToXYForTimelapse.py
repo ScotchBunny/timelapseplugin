@@ -233,9 +233,9 @@ class MoveToXYForTimelapse(Script):
                             new_gcode += "G0 F%f X%f Y%f\n" % (travelSpeed, frame_x, frame_y)
 
                             #Wait for in case of shaking printer and flush the G-code buffer
-                            new_gcode += "G4 P%f\n" % (pause)
                             if useM400:
                                 new_gcode += "M400\n"
+                            new_gcode += "G4 P%f\n" % (pause)
                             buffline = 0
                             while buffline < bufferSize:
                                 new_gcode += "G4 P1\n"
@@ -313,9 +313,9 @@ class MoveToXYForTimelapse(Script):
                     if not absolutePos:
                         new_gcode += "G90\n"
                     new_gcode += "G0 F%f X%f Y%f\n" % (travelSpeed, frame_x, frame_y)
-                    new_gcode += "G4 P%f\n" % (pause)
                     if useM400:
                         new_gcode += "M400\n"
+                    new_gcode += "G4 P%f\n" % (pause)
                     buffline = 0
                     while buffline < bufferSize:
                         new_gcode += "G4 P1\n"
