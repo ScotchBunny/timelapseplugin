@@ -210,7 +210,7 @@ class MoveToXYForTimelapse(Script):
                             #If set to Z-hop on move and the printer is not already doing a Z-hop
                             if zHop and not doingZHop:
                                 zhopForNow = zHopHeight
-                                new_gcode += "G%f F%f Z%f\n" % (g, f, zhopForNow+currentZ)
+                                new_gcode += "G%d F%f Z%f\n" % (g, f, zhopForNow+currentZ)
 
                             #Travel to frame position
                             new_gcode += "G0 F%f X%f Y%f\n" % (travelSpeed, frame_x, frame_y)
@@ -218,13 +218,13 @@ class MoveToXYForTimelapse(Script):
                             #Wait for in case of shaking printer and flush the G-code buffer
                             new_gcode += "G4 P%f\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\nG4 P1\n" % (pause)
                             #Perform Z-change, triggering the Octoprint timelapse
-                            new_gcode += "G%f F%f Z%f\n" % (g, f, currentZ+zhopForNow+deltaZ)
+                            new_gcode += "G%d F%f Z%f\n" % (g, f, currentZ+zhopForNow+deltaZ)
                             #Move back to original position
                             new_gcode += "G0 F%f X%f Y%f\n" % (travelSpeed, currentX, currentY)
 
                             #If set to Z-hop on move and the printer is not already doing a Z-hop
                             if zHop and not doingZHop:
-                                new_gcode += "G%f F%f Z%f\n" % (g, f, currentZ+deltaZ)
+                                new_gcode += "G%d F%f Z%f\n" % (g, f, currentZ+deltaZ)
                             #If set to retract and Z-hop on move and the printer is not already doing a Z-hop
                             if retract and not doingRetract:
                                 new_gcode += "G1 F%f E%f\n" % (rSpeed,rLength)
@@ -237,7 +237,7 @@ class MoveToXYForTimelapse(Script):
                                 new_gcode += "G91\n"
 
                             #Reset old travel speed and rewrite the rest of the original line
-                            new_gcode += "G%f F%f" % (g,f)
+                            new_gcode += "G%d F%f" % (g,f)
                             if self.getValue(line, 'X') is not None:
                                 new_gcode += " X%f" % (x)
                             if self.getValue(line, 'Y') is not None:
