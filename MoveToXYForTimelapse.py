@@ -61,6 +61,14 @@ class MoveToXYForTimelapse(Script):
                     "type": "float",
                     "default_value": 1
                 },
+                "picturePause":
+                {
+                    "label": "Pause after Frame",
+                    "description": "Pause duration at frame postion after Z-change to allow the picture to be processed.",
+                    "unit": "sec",
+                    "type": "float",
+                    "default_value": 1
+                },
                 "UseM400":
                 {
                     "label": "Use M400 GCode",
@@ -132,6 +140,7 @@ class MoveToXYForTimelapse(Script):
         pause = self.getSettingValueByKey("framePause")*1000
         if pause == 0:
             pause == 1
+        picture_pause = self.getSettingValueByKey("picturePause")*1000
 
         printing = False
         absolutePos = True
@@ -243,6 +252,16 @@ class MoveToXYForTimelapse(Script):
 
                             #Perform Z-change, triggering the Octoprint timelapse
                             new_gcode += "G%d F%f Z%f\n" % (g, f, currentZ+zhopForNow+deltaZ)
+
+                            #Wait for the picture to be taken
+                            if useM400:
+                                new_gcode += "M400\n"
+                            new_gcode += "G4 P%f\n" % (picture_pause)
+                            buffline = 0
+                            while buffline < bufferSize:
+                                new_gcode += "G4 P1\n"
+                                buffline = buffline + 1
+
                             #Move back to original position
                             new_gcode += "G0 F%f X%f Y%f\n" % (travelSpeed, currentX, currentY)
 
